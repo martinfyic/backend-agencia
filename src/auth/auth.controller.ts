@@ -23,7 +23,7 @@ export class AuthController {
 
   /**
    *
-   * ==> Registro de usuario
+   * ==> Registro de usuario (Público)
    *
    */
   @Post('register')
@@ -33,7 +33,7 @@ export class AuthController {
 
   /**
    *
-   * ==> Login de usuario
+   * ==> Login de usuario (Público)
    *
    */
   @Post('login')
@@ -43,7 +43,7 @@ export class AuthController {
 
   /**
    *
-   * ==> Listar todos los usuarios activos
+   * ==> Listar todos los usuarios activos (Privado)
    *
    */
   @Get()
@@ -53,7 +53,7 @@ export class AuthController {
 
   /**
    *
-   * ==> Listar usuario activo por su id
+   * ==> Listar usuario activo por su id (Privado)
    *
    */
   @Get(':id')
@@ -68,11 +68,21 @@ export class AuthController {
     return this.authService.findOneUser(id);
   }
 
+  /**
+   *
+   * ==> Actualizar usuario activo por su id (Privado)
+   *
+   */
   @Patch(':id')
   updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.authService.updateUser(+id, updateUserDto);
   }
 
+  /**
+   *
+   * ==> Remover usuario activo por su id (Privado)
+   *
+   */
   @Delete(':id')
   removeUser(@Param('id') id: string) {
     return this.authService.removeUser(+id);
