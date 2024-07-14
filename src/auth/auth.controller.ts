@@ -74,8 +74,15 @@ export class AuthController {
    *
    */
   @Patch(':id')
-  updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.authService.updateUser(+id, updateUserDto);
+  updateUser(
+    @Param(
+      'id',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    id: number,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.authService.updateUser(id, updateUserDto);
   }
 
   /**
