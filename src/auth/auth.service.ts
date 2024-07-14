@@ -37,7 +37,7 @@ export class AuthService extends PrismaClient implements OnModuleInit {
 
   /**
    *
-   * *registerUser Registro de usuario
+   * registerUser Registro de usuario
    *
    */
   async registerUser(registerUserDto: RegisterUserDto) {
@@ -100,7 +100,7 @@ export class AuthService extends PrismaClient implements OnModuleInit {
 
   /**
    *
-   * *loginUser Login de usuario
+   * loginUser Login de usuario
    *
    */
   async loginUser(loginUserDto: LoginUserDto) {
