@@ -59,7 +59,7 @@ export class RegisterUserDto {
 
   @IsOptional()
   @IsISO8601()
-  dateOfBirth: Date;
+  dateOfBirth?: Date;
 
   @IsOptional()
   @IsUrl()
