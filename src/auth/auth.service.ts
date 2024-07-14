@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 import { RegisterUserDto } from './dto/register-user.dto';
@@ -210,6 +210,7 @@ export class AuthService extends PrismaClient implements OnModuleInit {
         where: {
           id: id,
         },
+        include: { address: true },
       });
 
       if (!userData) {
@@ -240,11 +241,58 @@ export class AuthService extends PrismaClient implements OnModuleInit {
    *
    */
   async updateUser(id: number, updateUserDto: UpdateUserDto) {
-    return {
-      message: `This action updates a #${id} auth`,
-      id,
-      updateUserDto,
-    };
+    const { user: validUser } = await this.findOneUser(id);
+
+    try {
+      if (!validUser) {
+        throw new BadRequestException({
+          status: HttpStatus.BAD_REQUEST,
+          message: `User with id: ${id} not found`,
+        });
+      }
+
+      if (updateUserDto.password) {
+        updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
+      }
+
+      let userUpdated: User;
+      const { address, ...userData } = updateUserDto;
+      if (updateUserDto.address) {
+        userUpdated = await this.user.update({
+          where: { id },
+          data: {
+            ...userData,
+            address: {
+              update: address,
+            },
+          },
+          include: {
+            address: true,
+          },
+        });
+      } else {
+        userUpdated = await this.user.update({
+          where: { id },
+          data: userData,
+          include: {
+            address: true,
+          },
+        });
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, ...user } = userUpdated;
+
+      return {
+        metadata: {
+          status: HttpStatus.OK,
+          date: new Date().toISOString(),
+        },
+        user,
+      };
+    } catch (error) {
+      this.handleDBExceptions(error);
+    }
   }
 
   /**
