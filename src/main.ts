@@ -6,7 +6,12 @@ import { envs } from './config';
 
 async function bootstrap() {
   const logger = new Logger(bootstrap.name);
+
   const app = await NestFactory.create(AppModule);
+  app.enableCors({
+    methods: 'GET,PUT,PATCH,POST,DELETE',
+    origin: envs.originUrl,
+  });
   app.setGlobalPrefix('api');
   app.useGlobalPipes(
     new ValidationPipe({
