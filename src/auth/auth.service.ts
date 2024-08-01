@@ -91,7 +91,7 @@ export class AuthService extends PrismaClient implements OnModuleInit {
           date: new Date().toISOString(),
         },
         user: restUserData,
-        authToken: this.getJwtToken({ id: restUserData.id.toString() }),
+        authToken: await this.getJwtToken({ id: restUserData.id.toString() }),
       };
     } catch (error) {
       this.handleDBExceptions(error);
@@ -143,7 +143,7 @@ export class AuthService extends PrismaClient implements OnModuleInit {
         date: new Date().toISOString(),
       },
       user: user,
-      authToken: this.getJwtToken({ id: user.id.toString() }),
+      authToken: await this.getJwtToken({ id: user.id.toString() }),
     };
   }
 
